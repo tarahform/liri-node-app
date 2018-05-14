@@ -2,37 +2,40 @@ require("dotenv").config();
 var request = require('request');
 var Spotify = require("node-spotify-api");
 var Twitter = require("twitter");
-
+var fs = require("fs");
 var keys = require("./keys");
 
 var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
 
 var commands = process.argv[2];
+var title = process.argv[3];
 
-switch (commands) {
-    case "my-tweets":
-        myTweets();
-        break;
-    case "spotify-this-song":
-        if (!process.argv[3]) {
-            spotifyThisSong("The Sign Ace of Base");
-        } else {
-            spotifyThisSong(process.argv[3]);
-        }
-        break;
-    case "movie-this":
-        if (!process.argv[3]) {
-            movie("Mr. Nobody");
-        } else {
-            movie(process.argv[3]);
-        }
-        break;
-    case "do-what-it-says":
-        doWhatISay();
-        break;
-    default:
-        break;
+function switchFunction(commands, title) {
+    switch (commands) {
+        case "my-tweets":
+            myTweets();
+            break;
+        case "spotify-this-song":
+            if (!title) {
+                spotifyThisSong("The Sign Ace of Base");
+            } else {
+                spotifyThisSong(title);
+            }
+            break;
+        case "movie-this":
+            if (!title) {
+                movie("Mr. Nobody");
+            } else {
+                movie(title);
+            }
+            break;
+        case "do-what-it-says":
+            doWhatISay();
+            break;
+        default:
+            break;
+    }
 }
 
 // twitter //
@@ -44,8 +47,7 @@ function myTweets() {
     client.get("statuses/user_timeline", tweetParams, function (error, tweets, response) {
         if (!error) {
             for (var i = 0; i < tweets.length; i++) {
-                console.log(i);
-                console.log(tweets[i].text);
+                console.log(tweets[i].text + "Created at: " + tweets[i].created_at);
             }
         } else {
             console.log(error + " You are always wrong");
@@ -96,8 +98,16 @@ function movie(movie) {
 };
 // end of movie-this //
 
-// movie-this //
+// doWhatIsay //
 function doWhatISay() {
-
+    fs.readFile("random.txt", "utf8", function (err, data) {
+        if (err) {
+            return console.log(err);
+        }
+        var splitData = data.split(",");
+        switchFunction(splitData[0], splitData[1]);
+    });
 };
-    // end of movie-this //
+// end doWhatIsay //
+
+switchFunction(commands, title);
