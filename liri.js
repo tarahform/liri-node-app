@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config(); // protects api key
 var request = require('request');
 var Spotify = require("node-spotify-api");
 var Twitter = require("twitter");
