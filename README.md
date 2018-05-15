@@ -1,8 +1,6 @@
 # liri-node-app
 May 14, 2018
 
-# liri-node-app
-
 The Liri Node App is a Language Interpretation and Recognition Interface that runs in the command-line.
 
 Liri has 4 functions
